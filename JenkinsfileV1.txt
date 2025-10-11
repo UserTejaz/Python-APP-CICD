@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage("Code"){
+            steps{
+                echo "This is cloning the code"
+                git branch: "main", url:"https://github.com/UserTejaz/Python-APP-CICD"
+                echo "code cloning successful"
+            }
+        }
+        
+        stage("Build"){
+            steps{
+                echo "This is building the code"
+                sh "docker build -t my-python-app ."
+            }
+        }
+        
+        stage("Push to Dockerhub"){
+            steps{
+                echo "This is pushing the image to DockerHub"
+                withCredentials([usernamePassword(credentialsId: 'dockerhubCred', usernameVariable: 'dockerhubUsername', passwordVariable: 'dockerhubPassword')]) {
+                    sh "echo $dockerhubPassword | docker login -u $dockerhubUsername --password-stdin"
+                    sh "docker image tag my-python-app $dockerhubUsername/my-python-app:latest"
+                    sh "docker push $dockerhubUsername/my-python-app:latest"
+                }
+            }
+        }
+        
+        stage("Deploy"){
+            steps{
+                echo "This is deploying the code"
+                sh "docker compose up -d"
+            }
+        }
+    }
+}
