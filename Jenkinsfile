@@ -3,6 +3,10 @@
 pipeline {
     agent any
     
+    environment {
+        EMAIL_ID = "${EMAIL_ID}"  // uses the global variable defined in Jenkins
+    }
+
     stages {
         stage("Code") {
             steps {
@@ -34,7 +38,7 @@ pipeline {
     // Email Notifications
     post {
         success {
-            mail to: '${EMAIL_ID}',
+            mail to: "${env.EMAIL_ID}",
                  subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: """
                  Hi Team,<br><br>
@@ -47,7 +51,7 @@ pipeline {
         }
         
         failure {
-            mail to: '${EMAIL_ID}',
+            mail to: "${env.EMAIL_ID}",
                  subject: "FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: """
                  Hi Team,<br><br>
