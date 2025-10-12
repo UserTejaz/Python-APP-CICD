@@ -34,7 +34,7 @@ pipeline {
     // Email Notifications
     post {
         success {
-            mail to: 'tejas@example.com',
+            mail to: '${EMAIL_ID}',
                  subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: """
                  Hi Team,<br><br>
@@ -47,7 +47,7 @@ pipeline {
         }
         
         failure {
-            mail to: 'tejas@example.com',
+            mail to: '${EMAIL_ID}',
                  subject: "FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: """
                  Hi Team,<br><br>
